@@ -93,14 +93,14 @@ def cluster_number(df,df_normalised):
     Parameters
     ----------
     df : pandas.DataFrame
-        DESCRIPTION.
-    df_normalised : TYPE
-        DESCRIPTION.
+        Actual data.
+    df_normalised : pandas.DataFrame
+        Normalised data.
 
     Returns
     -------
-    TYPE
-        DESCRIPTION.
+    INT
+        Best cluster number.
 
     '''
     
@@ -134,6 +134,26 @@ def cluster_number(df,df_normalised):
         
     
 def clusters_and_centers(df,ncluster,y1,y2):
+    '''
+    clusters_and_centers will plot clusters and its centers for given data
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Data for which clusters and centers will be plotted.
+    ncluster : INT
+        Number of clusters.
+    y1 : INT
+        Starting year for forecasting.
+    y2 : INT
+        Ending year for forecasting.
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        Data with cluster labels column added.
+
+    '''
     # set up the clusterer with the number of expected clusters
     kmeans = cluster.KMeans(n_clusters=ncluster)
 
