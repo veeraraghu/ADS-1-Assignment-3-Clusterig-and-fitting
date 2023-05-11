@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import sklearn.cluster as cluster
 import sklearn.metrics as skmet
 import scipy.optimize as opt
+
+#Imported modules from class
 import cluster_tools as ct
 import errors as err
 import importlib
@@ -259,39 +261,39 @@ def forecast_gdp(df, country, start_year, end_year):
 
 
 #Reading GDP per capita Data
-df_co2 = reading_data("gdp_per_capita.csv")
-print(df_co2.describe())
+gdp = reading_data("gdp_per_capita.csv")
+print(gdp.describe())
 
 #Finding transpose of GDP per capita Data
-df_co2_tr = transposed_data(df_co2)
-print(df_co2_tr.head())
+gdp_tr = transposed_data(gdp)
+print(gdp_tr.head())
 
 #Selecting years for which correlation is done for further analysis
-df_co3 = df_co2[["1970", "1980", "1990", "2000", "2010", '2020']]
-print(df_co3.describe())
+gdp = gdp[["1970", "1980", "1990", "2000", "2010", '2020']]
+print(gdp.describe())
 
-correlation_and_scattermatrix(df_co3)
+correlation_and_scattermatrix(gdp)
 year1 = "1970"
 year2 = "2020"
 
 # Extracting columns for clustering
-df_ex = df_co3[[year1, year2]]
-df_ex = df_ex.dropna()
+gdp_ex = gdp[[year1, year2]]
+gdp_ex = gdp_ex.dropna()
 
 # Normalising data and storing minimum and maximum
-df_norm, df_min, df_max = ct.scaler(df_ex)
+df_norm, df_min, df_max = ct.scaler(gdp_ex)
 
 print()
 print("Number of Clusters and Scores")
-ncluster = cluster_number(df_ex, df_norm)
+ncluster = cluster_number(gdp_ex, df_norm)
 
 df_norm, cen = clusters_and_centers(df_norm, ncluster, year1, year2)
 
 #Applying backscaling to get actual cluster centers
 scen = ct.backscale(cen, df_min, df_max)
-print('scen\n',scen)
+print('scen\n', scen)
 
-df_ex, scen = clusters_and_centers(df_ex, ncluster, year1, year2)
+df_ex, scen = clusters_and_centers(gdp_ex, ncluster, year1, year2)
 
 '''
 We can see some difference in actual cluster centers and 
@@ -303,7 +305,7 @@ print('Countries in last cluster')
 print(df_ex[df_ex['labels'] == ncluster-1].index.values)
 
 #Forecast GDP per capita for Monaco
-forecast_gdp(df_co2_tr, 'Monaco', 1970, 2031)
+forecast_gdp(gdp_tr, 'Monaco', 1970, 2031)
 
 #Forecast GDP per capita for United States
-forecast_gdp(df_co2_tr, 'United States', 1960, 2031)
+forecast_gdp(gdp_tr, 'United States', 1960, 2031)
