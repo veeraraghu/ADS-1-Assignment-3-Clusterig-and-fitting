@@ -144,9 +144,9 @@ def clusters_and_centers(df,ncluster,y1,y2):
     ncluster : INT
         Number of clusters.
     y1 : INT
-        Starting year for forecasting.
+        Column 1
     y2 : INT
-        Ending year for forecasting.
+        Column 2
 
     Returns
     -------
@@ -179,7 +179,8 @@ def clusters_and_centers(df,ncluster,y1,y2):
     plt.ylabel(f"GDP per capita({y2})")
     plt.title('Clusters of Countries over GDP per capita in 1970 and 2020')
     plt.show()
- 
+    
+    print()
     print(cen)
 
     
@@ -196,6 +197,26 @@ def logistic(t, n0, g, t0):
 
 
 def forecast_gdp(df,country,start_year,end_year):
+    '''
+    forecast_gdp will analyse data and optimize to forecast GDP of selected 
+    country
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Data for which forecasting analysis is performed.
+    country : STR
+        Country for which forecasting is performed.
+    start_year : INT
+        Starting year for forecasting.
+    end_year : INT
+        Ending year for forecasting.
+
+    Returns
+    -------
+    None.
+
+    '''
     df=df.loc[:,country]
     df=df.dropna(axis=0) 
 
@@ -233,12 +254,15 @@ def forecast_gdp(df,country,start_year,end_year):
     print()
     print("GDP 2030", gdp2030*1e9, "+/-", sig*1e9)
 
+#Reading GDP per capita Data
 df_co2 = reading_data("gdp_per_capita.csv")
 print(df_co2.describe())
 
+#Finding transpose of GDP per capita Data
 df_co2_tr=transposed_data(df_co2)
 print(df_co2_tr.head())
 
+#Selecting years for which correlation is done for further analysis
 df_co3 = df_co2[["1970", "1980", "1990", "2000", "2010",'2020']]
 print(df_co3.describe())
 
@@ -246,12 +270,11 @@ correlation_and_scattermatrix(df_co3)
 year1="1970"
 year2="2020"
 
-# Extract the two columns for clustering
+# Extracting columns for clustering
 df_ex = df_co3[[year1, year2]]  
 df_ex = df_ex.dropna()  
-print(df_ex.head())
 
-# normalise, store minimum and maximum
+# Normalising data and storing minimum and maximum
 df_norm, df_min, df_max = ct.scaler(df_ex)
 
 print()
@@ -262,9 +285,12 @@ df_norm=clusters_and_centers(df_norm, ncluster,year1,year2)
 
 df_ex=clusters_and_centers(df_ex, ncluster,year1,year2)
 
-print(df_ex[df_ex['labels']==ncluster-2])
+print()
+print('Countries in 3rd cluster')
+print(df_ex[df_ex['labels']==ncluster-2].index.values)
 
-
+#Forecast GDP per capita for Monaco
 forecast_gdp(df_co2_tr,'Monaco',1970,2031)
 
+#Forecast GDP per capita for United States
 forecast_gdp(df_co2_tr,'United States',1960,2031) 
