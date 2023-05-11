@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 import sklearn.cluster as cluster
 import sklearn.metrics as skmet
 import scipy.optimize as opt
-
-#These modules are used from class
 import cluster_tools as ct
 import errors as err
 import importlib
@@ -155,6 +153,8 @@ def clusters_and_centers(df, ncluster, y1, y2):
     -------
     df : pandas.DataFrame
         Data with cluster labels column added.
+    cen : array
+        Cluster Centers.
 
     '''
     # set up the clusterer with the number of expected clusters
@@ -187,7 +187,7 @@ def clusters_and_centers(df, ncluster, y1, y2):
     print()
     print(cen)
 
-    return df
+    return df, cen
 
 
 def logistic(t, n0, g, t0):
@@ -285,13 +285,22 @@ print()
 print("Number of Clusters and Scores")
 ncluster = cluster_number(df_ex, df_norm)
 
-df_norm = clusters_and_centers(df_norm, ncluster, year1, year2)
+df_norm, cen = clusters_and_centers(df_norm, ncluster, year1, year2)
 
-df_ex = clusters_and_centers(df_ex, ncluster, year1, year2)
+#Applying backscaling to get actual cluster centers
+scen = ct.backscale(cen, df_min, df_max)
+print('scen\n',scen)
+
+df_ex, scen = clusters_and_centers(df_ex, ncluster, year1, year2)
+
+'''
+We can see some difference in actual cluster centers and 
+backscaled cluster centers.
+'''
 
 print()
-print('Countries in 3rd cluster')
-print(df_ex[df_ex['labels'] == ncluster-2].index.values)
+print('Countries in last cluster')
+print(df_ex[df_ex['labels'] == ncluster-1].index.values)
 
 #Forecast GDP per capita for Monaco
 forecast_gdp(df_co2_tr, 'Monaco', 1970, 2031)
