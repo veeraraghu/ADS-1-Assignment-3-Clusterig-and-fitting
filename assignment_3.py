@@ -13,17 +13,62 @@ import importlib
 
 
 def reading_data(filepath):
-    data=pd.read_csv(filepath,skiprows=4)
-    data=data.set_index('Country Name',drop=True)
-    data=data.loc[:,'1960':'2021']
-    return data
-def transposed_data(data):
-    data_tr=data.transpose()
-    
-    return data_tr
+    '''
+    reading_data will create dataframe from file in the given filepath
 
-def correlation_and_scattermatrix(data):
-    corr = data.corr()
+    Parameters
+    ----------
+    filepath : STR
+        File path or location.
+
+    Returns
+    -------
+    df : pandas.DataFrame
+        DataFrame created from given filepath.
+
+    '''
+    df=pd.read_csv(filepath,skiprows=4)
+    df=df.set_index('Country Name',drop=True)
+    df=df.loc[:,'1960':'2021']
+    
+    return df
+
+
+def transposed_data(df):
+    '''
+    transposed_data create transpose of given dataframe
+
+    Parameters
+    ----------
+    df  : pandas.DataFrame
+        DataFrame for which transpose to be found.
+
+    Returns
+    -------
+    data_tr : pandas.DataFrame
+        Transposed DataFrame of given DataFrame.
+
+    '''
+    df_tr=df.transpose()
+    
+    return df_tr
+
+def correlation_and_scattermatrix(df):
+    '''
+    correlation_and_scattermatrix plots correlation matrix and scatter plots
+    of data among columns
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DataFrame for which analysis will be done.
+
+    Returns
+    -------
+    None.
+
+    '''
+    corr = df.corr()
     print(corr) 
     plt.figure(figsize=(10, 10))
     plt.matshow(corr, cmap='coolwarm')
@@ -35,12 +80,29 @@ def correlation_and_scattermatrix(data):
     plt.colorbar()
     plt.show()
 
-    pd.plotting.scatter_matrix(data, figsize=(12, 12), s=5, alpha=0.8)
+    pd.plotting.scatter_matrix(df, figsize=(12, 12), s=5, alpha=0.8)
     plt.show()
     
     return
 
 def cluster_number(df,df_normalised):
+    '''
+    cluster_number calculates the best number of clusters based on silhouette
+    score
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DESCRIPTION.
+    df_normalised : TYPE
+        DESCRIPTION.
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    '''
     
     clusters=[]
     scores=[]
